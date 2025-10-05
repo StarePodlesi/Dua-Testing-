@@ -41,7 +41,7 @@
   .bg-video-wrap video{width:100%;height:100%;object-fit:cover;display:block;filter:blur(6px) saturate(.9)}
   #close-full{position:absolute;top:12px;right:12px;z-index:1600;background:rgba(0,0,0,0.55);color:#fff;padding:8px 10px;border-radius:8px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.4)}
   #fullscreen-info{position:relative;z-index:1500;width:100%;padding:22px 24px;background:linear-gradient(90deg, rgba(64,224,208,0.9), rgba(15,79,84,0.95));border-top-left-radius:16px;border-top-right-radius:16px;backdrop-filter:blur(6px)}
-  .info-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .info-row{display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer}
   .title-big{font-size:1.5rem;font-weight:900;color:#fff;max-width:60%;line-height:1.05}
   .controls{display:flex;align-items:center;gap:12px}
   .controls button{width:48px;height:48px;border-radius:50%;background:#111;color:#fff;font-size:18px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
@@ -49,7 +49,7 @@
   #time-big{font-size:1.3rem;font-weight:900;color:#fff;min-width:140px;text-align:right}
   .progress-wrap{width:100%;margin-top:12px}
   .progress-bar{width:100%;height:12px;background:rgba(255,255,255,0.12);border-radius:8px;overflow:hidden;cursor:pointer}
-  .progress-fill{height:100%;width:0%;background:#001; /* will be overridden by gradient */ background:linear-gradient(90deg,#40E0D0,#0ff);border-radius:8px;transition:width .06s linear}
+  .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#40E0D0,#0ff);border-radius:8px;transition:width .06s linear}
 
   /* Lyrics area (inside fullscreen under progress) */
   .lyrics-container{margin-top:14px;max-height:38vh;overflow:auto;padding:8px 6px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));scrollbar-width:none}
@@ -99,14 +99,13 @@
 <!-- Fullscreen player -->
 <div id="fullscreen-player" aria-hidden="true">
   <div class="bg-video-wrap" id="bg-video-wrap">
-    <!-- optional visual - keep empty or set src dynamically -->
     <video id="bg-video" autoplay muted loop playsinline preload="none"></video>
   </div>
 
   <button id="close-full" title="Zavřít přehrávač">✖</button>
 
   <div id="fullscreen-info" aria-hidden="true">
-    <div class="info-row">
+    <div class="info-row" id="fs-header">
       <div class="title-big" id="fs-title">—</div>
       <div style="display:flex;align-items:center;gap:12px">
         <div id="time-big">0:00 / 0:00</div>
@@ -129,11 +128,9 @@
   </div>
 </div>
 
-<!-- Audio element (lazy loaded via JS src assignment on play) -->
 <audio id="audio" preload="none"></audio>
 
 <script>
-/* ===== playlist - podle tvých dat (upravené cesty) ===== */
 const tracks = [
   {num:1,title:"End Of An Era",mp3:"mech.mp3",mp4:"a82x20.mp4",duration:"3:15"},
   {num:2,title:"Houdini",mp3:"kouzelník.mp3",mp4:"a82xf4.mp4",duration:"3:08"},
@@ -148,7 +145,6 @@ const tracks = [
   {num:11,title:"Happy For You",mp3:"Pro tebe.mp3",mp4:"a83003.mp4",duration:"4:04"}
 ];
 
-/* ===== elements ===== */
 const tracklistDiv = document.getElementById('tracklist');
 const miniPlayer = document.getElementById('mini-player');
 const miniTitle = document.getElementById('mini-title');
@@ -170,242 +166,134 @@ const progressBar = document.getElementById('progress-bar');
 const progressFill = document.getElementById('progress-fill');
 const timeBig = document.getElementById('time-big');
 const lyricsContainer = document.getElementById('lyrics-container');
+const fsHeader = document.getElementById('fs-header');
 
 const audio = document.getElementById('audio');
 
 let currentIndex = null;
-let lyricsMap = {}; // store lyrics per track index
-let lyricNodes = []; // nodes for current lyrics
+let lyricsMap = {};
+let lyricNodes = [];
 let lyricTimer = null;
 
-/* ===== build tracklist in DOM ===== */
-tracks.forEach(track => {
-  const row = document.createElement('div');
-  row.className = 'track fade-in';
-  row.dataset.index = track.num - 1;
-  row.innerHTML = `<div style="display:flex;gap:12px;align-items:center">
-                     <div class="num">${track.num}</div>
-                     <div class="title">${track.title}</div>
-                   </div>
-                   <div class="duration">${track.duration}</div>`;
-  row.addEventListener('click', () => playTrack(track.num - 1));
-  tracklistDiv.appendChild(row);
-});
-
-/* ===== sample synchronized lyrics for "Houdini" (track index 1) ===== */
-/* Times in seconds approximate — uprav dle svého MP3 pokud chceš přesnější */
+/* ===== sample lyrics for Houdini ===== */
 lyricsMap[1] = [
-  {t:0, text:"[Intro]"},
-  {t:4, text:"Okay"},
-  {t:12, text:"Mm, ah"},
-  {t:20.9, text:"[Chorus]"},
-  {t:20.9, text:"I come and I go"},
-  {t:23.0, text:"Tell me all the ways you need me"},
-  {t:25.0, text:"I'm not here for long"},
-  {t:27.0, text:"Catch me or I go Houdini"},
-  {t:29.0, text:"I come and I go"},
-  {t:31.2, text:"Prove you got the right to please me"},
-  {t:33.1, text:"Everybody knows"},
-  {t:35.1, text:"Catch me or I go Houdini"},
-  {t:37.9, text:"[Verse 1]"},
-  {t:37.9, text:"Time is passin' like a solar eclipse"},
-  {t:41.7, text:"See you watchin' and you blow me a kiss"},
-  {t:45.9, text:"It's your moment, baby, don't let it slip"},
-  {t:50.1, text:"Come in closer, are you readin' my lips?"},
-  {t:52.9, text:"[Chorus]"},
-  {t:52.9, text:"They say I come and I go"},
-  {t:55.7, text:"Tell me all the ways you need me"},
-  {t:57.7, text:"I'm not here for long"},
-  {t:59.7, text:"Catch me or I go Houdini"},
-  {t:61.8, text:"I come and I go"},
-  {t:63.9, text:"Prove you got the right to please me"},
-  {t:66.0, text:"Everybody knows"},
-  {t:68.0, text:"Catch me or I go Houdini"},
-  {t:70.7, text:"[Post-Chorus]"},
-  {t:70.7, text:"If you're good enough, you'll find the way"},
-  {t:74.9, text:"Maybe you could cause a girl to change (Her ways)"},
-  {t:79.0, text:"Do you think about it night and day?"},
-  {t:83.1, text:"Maybe you could be the one to make me stay"},
-  {t:87.3, text:"[Verse 2]"},
-  {t:87.3, text:"Everything you say is soundin' so sweet (Ah-ah)"},
-  {t:90.5, text:"But do you practise everything that you preach? (Ah-ah)"},
-  {t:93.5, text:"I need something that'll make me believe (Ah-ah)"},
-  {t:96.0, text:"If you got it, baby, give it to me"},
-  {t:99.5, text:"[Chorus]"},
-  {t:99.7, text:"They say I come and I go"},
-  {t:102.2, text:"Tell me all the ways you need me"},
-  {t:104.1, text:"I'm not here for long"},
-  {t:106.0, text:"Catch me or I go Houdini"},
-  {t:108.0, text:"I come and I go (I come and I go)"},
-  {t:110.0, text:"Prove you got the right to please me"},
-  {t:112.0, text:"Everybody knows (I'm not here for long)"},
-  {t:114.0, text:"Catch me or I go Houdini"},
-  {t:116.0, text:"[Bridge]"},
-  {t:116.5, text:"Oh-oh"},
-  {t:118.0, text:"Ooh"},
-  {t:120.0, text:"[Chorus]"},
-  {t:120.5, text:"I come and I go"},
-  {t:122.5, text:"Tell me all the ways you need me (Ooh)"},
-  {t:124.5, text:"I'm not here for long"},
-  {t:126.5, text:"Catch me or I go Houdini"},
-  {t:128.5, text:"I come and I go (I come and I go)"},
-  {t:130.5, text:"Prove you got the right to please me"},
-  {t:132.5, text:"Everybody knows (I'm not here for long)"},
-  {t:134.0, text:"Catch me or I go Houdini"},
-  {t:136.0, text:"[Outro]"},
-  {t:136.5, text:"Houdini (Ah)"},
-  {t:137.5, text:"Catch me or I go Houdini"}
+  {t:0,text:"[Intro]"},
+  {t:4,text:"Okay"},
+  {t:12,text:"Mm, ah"},
+  {t:20.9,text:"[Chorus]"},
+  {t:20.9,text:"I come and I go"},
+  {t:23.0,text:"Tell me all the ways you need me"},
+  {t:25.0,text:"I'm not here for long"},
+  {t:27.0,text:"Catch me or I go Houdini"},
+  {t:29.0,text:"I come and I go"},
+  {t:31.2,text:"Prove you got the right to please me"},
+  {t:33.1,text:"Everybody knows"},
+  {t:35.1,text:"Catch me or I go Houdini"}
 ];
 
 /* ===== helpers ===== */
-function formatTime(t){
-  if(!t || isNaN(t)) return '0:00';
-  const m = Math.floor(t/60);
-  const s = Math.floor(t%60);
-  return m+':' + (s<10 ? '0'+s : s);
-}
+function formatTime(t){ if(!t||isNaN(t)) return '0:00'; const m=Math.floor(t/60); const s=Math.floor(t%60); return m+':' + (s<10?'0'+s:s); }
 
-/* ===== render lyrics into container (for current track) ===== */
 function renderLyricsFor(index){
-  lyricsContainer.innerHTML = '';
-  lyricNodes = [];
-  const lines = lyricsMap[index] || [];
-  lines.forEach((ln,i) => {
-    const div = document.createElement('div');
-    div.className = (ln.text && ln.text.startsWith('[')) ? 'lyric-line label' : 'lyric-line';
-    div.dataset.time = String(ln.t);
-    div.textContent = ln.text;
+  lyricsContainer.innerHTML=''; lyricNodes=[];
+  const lines = lyricsMap[index]||[];
+  lines.forEach(ln=>{
+    const div=document.createElement('div');
+    div.className = (ln.text.startsWith('[')?'lyric-line label':'lyric-line');
+    div.dataset.time=String(ln.t);
+    div.textContent=ln.text;
     lyricsContainer.appendChild(div);
     lyricNodes.push(div);
   });
-  // ensure scrollTop = 0
-  lyricsContainer.scrollTop = 0;
+  lyricsContainer.scrollTop=0;
 }
 
-/* ===== update highlight according to audio time and auto-scroll ===== */
 function updateLyricsHighlight(){
   if(!lyricNodes.length) return;
-  const ct = audio.currentTime;
-  let activeIdx = -1;
+  const ct=audio.currentTime;
+  let activeIdx=-1;
   for(let i=0;i<lyricNodes.length;i++){
-    const t = parseFloat(lyricNodes[i].dataset.time || 0);
-    if(ct >= t) activeIdx = i;
-    else break;
+    const t=parseFloat(lyricNodes[i].dataset.time||0);
+    if(ct>=t) activeIdx=i; else break;
   }
-  lyricNodes.forEach((n, idx) => {
-    n.classList.toggle('active', idx === activeIdx);
-  });
-  if(activeIdx >= 0){
-    const node = lyricNodes[activeIdx];
-    // center the active node in lyrics container
-    const container = lyricsContainer;
-    const desired = node.offsetTop - (container.clientHeight/2) + (node.clientHeight/2);
-    container.scrollTo({ top: desired, behavior: 'smooth' });
+  lyricNodes.forEach((n,idx)=>n.classList.toggle('active', idx===activeIdx));
+  if(activeIdx>=0){
+    const node=lyricNodes[activeIdx];
+    const container=lyricsContainer;
+    const desired=node.offsetTop-(container.clientHeight/2)+(node.clientHeight/2);
+    container.scrollTo({top:desired,behavior:'smooth'});
   }
 }
 
-/* ===== update UI buttons/time/progress ===== */
 function updateUI(){
-  const current = formatTime(audio.currentTime);
-  const total = formatTime(audio.duration);
-  timeBig.textContent = `${current} / ${total}`;
-  miniTime.textContent = `${current} / ${total}`;
-  const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
-  progressFill.style.width = pct + '%';
-  // play/pause text
-  miniPlay.textContent = audio.paused ? '▶' : '⏸';
-  playBtn.textContent = audio.paused ? '▶' : '⏸';
+  const current=formatTime(audio.currentTime);
+  const total=formatTime(audio.duration);
+  timeBig.textContent=`${current} / ${total}`;
+  miniTime.textContent=`${current} / ${total}`;
+  const pct=audio.duration?(audio.currentTime/audio.duration)*100:0;
+  progressFill.style.width=pct+'%';
 }
 
-/* ===== main playback function: open fullscreen, lazy load audio/video, render lyrics ===== */
 function playTrack(index){
-  currentIndex = index;
-  const t = tracks[index];
-  // lazy load audio/video only on first play
-  if(audio.src !== t.mp3) audio.src = t.mp3;
-  // set video background (lazy)
-  if(bgVideo && t.mp4){
-    bgVideo.src = t.mp4;
-    // keep video muted & low opacity; it shows as blurred background
-  }
-  // show mini player and fullscreen (we open fullscreen directly as requested)
-  miniPlayer.style.display = 'flex';
-  fsPlayer.style.display = 'flex';
-  fsPlayer.setAttribute('aria-hidden','false');
-  fsTitle.textContent = t.title;
-  miniTitle.textContent = t.title;
-  miniCover.src = t.cover || 'radical_optimism.jpg';
-  // render lyrics for Houdini only (index 1), or empty for others
+  const track=tracks[index];
+  if(!track) return;
+  currentIndex=index;
+  audio.src=track.mp3;
+  bgVideo.src=track.mp4;
+  fsTitle.textContent=track.title;
+  miniTitle.textContent=track.title;
+  miniCover.src='radical_optimism.jpg';
+  audio.play();
+  miniPlayer.style.display='flex';
+  fsPlayer.style.display='flex';
   renderLyricsFor(index);
-  // play audio
-  audio.play().catch(()=>{ /* autoplay may be blocked until user interacts; clicking track should allow */ });
-  // update UI immediately
-  updateUI();
 }
 
-/* ===== navigation controls ===== */
-function playNext(){ if(currentIndex === null) currentIndex = 0; else currentIndex = (currentIndex + 1) % tracks.length; playTrack(currentIndex); }
-function playPrev(){ if(currentIndex === null) currentIndex = 0; else currentIndex = (currentIndex - 1 + tracks.length) % tracks.length; playTrack(currentIndex); }
-
-/* ===== wire up controls ===== */
-miniPlay.addEventListener('click', () => {
-  if(!audio.src){ // nothing loaded -> play selected default (Houdini if present)
-    const idx = tracks.findIndex(t=>t.title.toLowerCase().includes('houdini')) ;
-    playTrack(idx >= 0 ? idx : 0);
-    return;
-  }
-  audio.paused ? audio.play() : audio.pause();
-  updateUI();
-});
-miniPrev.addEventListener('click', playPrev);
-miniNext.addEventListener('click', playNext);
-miniExpand.addEventListener('click', ()=>{ fsPlayer.style.display = 'flex'; });
-
-playBtn.addEventListener('click', ()=>{ audio.paused ? audio.play() : audio.pause(); updateUI(); });
-prevBtn.addEventListener('click', playPrev);
-nextBtn.addEventListener('click', playNext);
-
-closeFull.addEventListener('click', ()=>{
-  // hide fullscreen but keep audio running (user requested music continues)
-  fsPlayer.style.display = 'none';
+/* ===== tracklist ===== */
+tracks.forEach((t,i)=>{
+  const div=document.createElement('div');
+  div.className='track';
+  div.innerHTML=`<div class="num">${t.num}</div><div class="title">${t.title}</div><div class="duration">${t.duration}</div>`;
+  div.addEventListener('click',()=>playTrack(i));
+  tracklistDiv.appendChild(div);
 });
 
-/* progress click / seek */
-progressBar.addEventListener('click', (e) => {
-  if(!audio.duration) return;
-  const rect = progressBar.getBoundingClientRect();
-  const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
-  audio.currentTime = (x / rect.width) * audio.duration;
-  updateUI();
+/* ===== controls ===== */
+playBtn.addEventListener('click',()=>audio.paused?audio.play():audio.pause());
+miniPlay.addEventListener('click',()=>audio.paused?audio.play():audio.pause());
+prevBtn.addEventListener('click',()=>{if(currentIndex>0)playTrack(currentIndex-1)});
+nextBtn.addEventListener('click',()=>{if(currentIndex<tracks.length-1)playTrack(currentIndex+1)});
+miniPrev.addEventListener('click',()=>{if(currentIndex>0)playTrack(currentIndex-1)});
+miniNext.addEventListener('click',()=>{if(currentIndex<tracks.length-1)playTrack(currentIndex+1)});
+
+closeFull.addEventListener('click',()=>fsPlayer.style.display='none');
+miniExpand.addEventListener('click',()=>fsPlayer.style.display='flex');
+
+/* progress bar seeking */
+progressBar.addEventListener('click',e=>{
+  const rect=progressBar.getBoundingClientRect();
+  const pct=(e.clientX-rect.left)/rect.width;
+  audio.currentTime=audio.duration*pct;
 });
 
-/* audio events */
-audio.addEventListener('timeupdate', () => {
+/* ===== toggle lyrics on header click ===== */
+let lyricsVisible=true;
+fsHeader.addEventListener('click',()=>{
+  lyricsVisible=!lyricsVisible;
+  lyricsContainer.style.display=lyricsVisible?'block':'none';
+});
+
+/* ===== audio timeupdate ===== */
+audio.addEventListener('timeupdate',()=>{
   updateUI();
   updateLyricsHighlight();
 });
-audio.addEventListener('play', updateUI);
-audio.addEventListener('pause', updateUI);
-audio.addEventListener('ended', ()=> {
-  // auto next
-  playNext();
-});
-
-/* prevent ugly behaviour on unload */
-window.addEventListener('beforeunload', ()=>{ try{ audio.pause(); }catch(e){} });
-
-/* initialize: hide fullscreen, mini hidden until a track is played */
-fsPlayer.style.display = 'none';
-miniPlayer.style.display = 'none';
-
-/* Accessibility shortcut: space toggles play/pause when focused on body */
-window.addEventListener('keydown', (e)=>{
-  if(e.code === 'Space' && document.activeElement === document.body){
-    e.preventDefault();
-    if(audio.src) { audio.paused ? audio.play() : audio.pause(); updateUI(); }
-  } else if(e.key === 'ArrowRight') playNext();
-  else if(e.key === 'ArrowLeft') playPrev();
-});
+audio.addEventListener('play',()=>playBtn.textContent='⏸');
+audio.addEventListener('pause',()=>playBtn.textContent='▶');
+audio.addEventListener('play',()=>miniPlay.textContent='⏸');
+audio.addEventListener('pause',()=>miniPlay.textContent='▶');
+audio.addEventListener('ended',()=>{if(currentIndex<tracks.length-1)playTrack(currentIndex+1)});
 </script>
+
 </body>
 </html>
