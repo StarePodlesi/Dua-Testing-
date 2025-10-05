@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dua Lipa — Houdini Player</title>
 <style>
-body { margin:0; font-family:"Inter",sans-serif; background:#0f4f54; color:#fff;}
+body { margin:0; font-family:"Inter",sans-serif; background:#0f4f54; color:#fff; overflow:hidden;}
 button{cursor:pointer;}
-#lyrics-wrap { max-width:720px; margin:60px auto; font-size:1.3rem; line-height:1.8; }
+#lyrics-wrap { max-width:720px; margin:60px auto; font-size:1.3rem; line-height:1.8; overflow-y:auto; height:calc(100vh - 100px); padding-bottom:50px;}
 .lyric-line { padding:4px; color:#ccc; transition:all .18s; }
 .lyric-line.active { color:#000; font-weight:900; background:linear-gradient(90deg,#40E0D0,#0f4f54); border-radius:4px; padding:4px 8px; }
 #mini-player{position:fixed; left:12px; right:12px; bottom:12px; background:linear-gradient(90deg,#40E0D0,#0f4f54); padding:12px; border-radius:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; box-shadow:0 12px 36px rgba(0,0,0,.5); z-index:1500;}
@@ -15,7 +15,7 @@ button{cursor:pointer;}
 .mini-title{font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;}
 .controls button{width:52px;height:52px;border-radius:50%;border:0;background:#222;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.2);}
 .controls button:hover{transform:scale(1.04);background:#40E0D0;}
-#fullscreen-player{position:fixed; inset:0; display:none; align-items:flex-end; justify-content:flex-end; z-index:2000; overflow:hidden;}
+#fullscreen-player{position:fixed; inset:0; display:none; align-items:flex-end; justify-content:flex-end; z-index:2000; overflow:hidden; background:rgba(0,0,0,0.7);}
 #fullscreen-info{position:relative; z-index:1500; width:100%; padding:36px 30px; background:linear-gradient(90deg,#40E0D0,#0f4f54); border-top-left-radius:18px; border-top-right-radius:18px; box-shadow:0 -18px 60px rgba(0,0,0,.25);}
 .info-row{display:flex;align-items:center;justify-content:space-between;gap:16px;}
 #time-big{font-size:2.3rem;font-weight:900;color:#000;min-width:160px;text-align:right;}
@@ -48,68 +48,68 @@ button{cursor:pointer;}
   <div class="lyric-line" data-time="50.3">Come in closer, are you readin' my lips?</div>
 
   <!-- Chorus -->
-  <div class="lyric-line" data-time="252">[Chorus]</div>
-  <div class="lyric-line" data-time="252.5">They say I come and I go</div>
-  <div class="lyric-line" data-time="272">Tell me all the ways you need me</div>
-  <div class="lyric-line" data-time="282.5">I'm not here for long</div>
-  <div class="lyric-line" data-time="302">Catch me or I go Houdini</div>
-  <div class="lyric-line" data-time="322">I come and I go</div>
-  <div class="lyric-line" data-time="332.5">Prove you got the right to please me</div>
-  <div class="lyric-line" data-time="352">Everybody knows</div>
-  <div class="lyric-line" data-time="36.5">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="200">[Chorus]</div>
+  <div class="lyric-line" data-time="200">They say I come and I go</div>
+  <div class="lyric-line" data-time="200">Tell me all the ways you need me</div>
+  <div class="lyric-line" data-time="200.5">I'm not here for long</div>
+  <div class="lyric-line" data-time="300">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="300">I come and I go</div>
+  <div class="lyric-line" data-time="300.5">Prove you got the right to please me</div>
+  <div class="lyric-line" data-time="300">Everybody knows</div>
+  <div class="lyric-line" data-time="300">Catch me or I go Houdini</div>
 
   <!-- Post-Chorus -->
-  <div class="lyric-line" data-time="39">[Post-Chorus]</div>
-  <div class="lyric-line" data-time="39.5">If you're good enough, you'll find the way</div>
-  <div class="lyric-line" data-time="41">Maybe you could cause a girl to change (Her ways)</div>
-  <div class="lyric-line" data-time="42.5">Do you think about it night and day?</div>
-  <div class="lyric-line" data-time="44">Maybe you could be the one to make me stay</div>
+  <div class="lyric-line" data-time="200">[Post-Chorus]</div>
+  <div class="lyric-line" data-time="200">If you're good enough, you'll find the way</div>
+  <div class="lyric-line" data-time="200">Maybe you could cause a girl to change (Her ways)</div>
+  <div class="lyric-line" data-time="200">Do you think about it night and day?</div>
+  <div class="lyric-line" data-time="200">Maybe you could be the one to make me stay</div>
 
   <!-- Verse 2 -->
-  <div class="lyric-line" data-time="46">[Verse 2]</div>
-  <div class="lyric-line" data-time="46.5">Everything you say is soundin' so sweet (Ah-ah)</div>
-  <div class="lyric-line" data-time="48">But do you practise everything that you preach? (Ah-ah)</div>
-  <div class="lyric-line" data-time="49.5">I need something that'll make me believe (Ah-ah)</div>
-  <div class="lyric-line" data-time="51">If you got it, baby, give it to me</div>
+  <div class="lyric-line" data-time="200">[Verse 2]</div>
+  <div class="lyric-line" data-time="200">Everything you say is soundin' so sweet (Ah-ah)</div>
+  <div class="lyric-line" data-time="200">But do you practise everything that you preach? (Ah-ah)</div>
+  <div class="lyric-line" data-time="200">I need something that'll make me believe (Ah-ah)</div>
+  <div class="lyric-line" data-time="200">If you got it, baby, give it to me</div>
 
   <!-- Chorus -->
-  <div class="lyric-line" data-time="53">[Chorus]</div>
-  <div class="lyric-line" data-time="53.5">They say I come and I go</div>
-  <div class="lyric-line" data-time="55">Tell me all the ways you need me</div>
-  <div class="lyric-line" data-time="56.5">I'm not here for long</div>
-  <div class="lyric-line" data-time="58">Catch me or I go Houdini</div>
-  <div class="lyric-line" data-time="60">I come and I go (I come and I go)</div>
-  <div class="lyric-line" data-time="61.5">Prove you got the right to please me</div>
-  <div class="lyric-line" data-time="63">Everybody knows (I'm not here for long)</div>
-  <div class="lyric-line" data-time="64.5">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="200">[Chorus]</div>
+  <div class="lyric-line" data-time="200">They say I come and I go</div>
+  <div class="lyric-line" data-time="200">Tell me all the ways you need me</div>
+  <div class="lyric-line" data-time="200">I'm not here for long</div>
+  <div class="lyric-line" data-time="200">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="200">I come and I go (I come and I go)</div>
+  <div class="lyric-line" data-time="200">Prove you got the right to please me</div>
+  <div class="lyric-line" data-time="200">Everybody knows (I'm not here for long)</div>
+  <div class="lyric-line" data-time="200">Catch me or I go Houdini</div>
 
   <!-- Post-Chorus -->
-  <div class="lyric-line" data-time="67">[Post-Chorus]</div>
-  <div class="lyric-line" data-time="67.5">If you're good enough, you'll find the way</div>
-  <div class="lyric-line" data-time="69">Maybe you could cause a girl to change (Her ways)</div>
-  <div class="lyric-line" data-time="70.5">Do you think about it night and day?</div>
-  <div class="lyric-line" data-time="72">Maybe you could be the one to make me stay</div>
+  <div class="lyric-line" data-time="200">[Post-Chorus]</div>
+  <div class="lyric-line" data-time="200">If you're good enough, you'll find the way</div>
+  <div class="lyric-line" data-time="200">Maybe you could cause a girl to change (Her ways)</div>
+  <div class="lyric-line" data-time="200">Do you think about it night and day?</div>
+  <div class="lyric-line" data-time="200">Maybe you could be the one to make me stay</div>
 
   <!-- Bridge -->
-  <div class="lyric-line" data-time="74">[Bridge]</div>
-  <div class="lyric-line" data-time="74.5">Oh-oh</div>
-  <div class="lyric-line" data-time="75.5">Ooh</div>
+  <div class="lyric-line" data-time="200">[Bridge]</div>
+  <div class="lyric-line" data-time="200">Oh-oh</div>
+  <div class="lyric-line" data-time="200">Ooh</div>
 
   <!-- Chorus -->
-  <div class="lyric-line" data-time="77">[Chorus]</div>
-  <div class="lyric-line" data-time="77.5">I come and I go</div>
-  <div class="lyric-line" data-time="79">Tell me all the ways you need me (Ooh)</div>
-  <div class="lyric-line" data-time="80.5">I'm not here for long</div>
-  <div class="lyric-line" data-time="82">Catch me or I go Houdini</div>
-  <div class="lyric-line" data-time="84">I come and I go (I come and I go)</div>
-  <div class="lyric-line" data-time="85.5">Prove you got the right to please me</div>
-  <div class="lyric-line" data-time="87">Everybody knows (I'm not here for long)</div>
-  <div class="lyric-line" data-time="88.5">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="200">[Chorus]</div>
+  <div class="lyric-line" data-time="200">I come and I go</div>
+  <div class="lyric-line" data-time="200">Tell me all the ways you need me (Ooh)</div>
+  <div class="lyric-line" data-time="200">I'm not here for long</div>
+  <div class="lyric-line" data-time="200">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="200">I come and I go (I come and I go)</div>
+  <div class="lyric-line" data-time="200">Prove you got the right to please me</div>
+  <div class="lyric-line" data-time="200">Everybody knows (I'm not here for long)</div>
+  <div class="lyric-line" data-time="200">Catch me or I go Houdini</div>
 
   <!-- Outro -->
-  <div class="lyric-line" data-time="91">[Outro]</div>
-  <div class="lyric-line" data-time="91.5">Houdini (Ah)</div>
-  <div class="lyric-line" data-time="92.5">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="200">[Outro]</div>
+  <div class="lyric-line" data-time="200">Houdini (Ah)</div>
+  <div class="lyric-line" data-time="200">Catch me or I go Houdini</div>
 </div>
 
 <!-- MINI PLAYER -->
@@ -147,6 +147,7 @@ const miniPlay = document.getElementById('mini-play');
 const playBtn = document.getElementById('play-btn');
 const miniTime = document.getElementById('mini-time');
 const timeBig = document.getElementById('time-big');
+const container = document.getElementById('lyrics-wrap');
 
 miniPlay.addEventListener('click', () => { audio.paused ? audio.play() : audio.pause(); });
 playBtn.addEventListener('click', () => { audio.paused ? audio.play() : audio.pause(); });
@@ -159,6 +160,13 @@ audio.addEventListener('timeupdate', () => {
     if(currentTime >= t) active = idx;
   });
   lyricNodes.forEach((line, idx) => { line.classList.toggle('active', idx === active); });
+
+  // scroll aktivního řádku do středu
+  if(active >= 0){
+    const line = lyricNodes[active];
+    const offset = line.offsetTop - container.offsetHeight/2 + line.offsetHeight/2;
+    container.scrollTo({ top: offset, behavior: 'smooth' });
+  }
 
   const formatTime = t => { if(isNaN(t)) return "0:00"; let m=Math.floor(t/60), s=Math.floor(t%60); return m+":"+(s<10?"0"+s:s); };
   miniTime.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
