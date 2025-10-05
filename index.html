@@ -1,0 +1,111 @@
+<div id="lyrics-wrap">
+  <!-- Intro -->
+  <div class="lyric-line" data-time="0">Okay</div>
+  <div class="lyric-line" data-time="1.5">Mm, ah</div>
+
+  <!-- Chorus 1 -->
+  <div class="lyric-line" data-time="3">I come and I go</div>
+  <div class="lyric-line" data-time="5">Tell me all the ways you need me</div>
+  <div class="lyric-line" data-time="8">I'm not here for long</div>
+  <div class="lyric-line" data-time="10.5">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="13">I come and I go</div>
+  <div class="lyric-line" data-time="15.5">Prove you got the right to please me</div>
+  <div class="lyric-line" data-time="18">Everybody knows</div>
+  <div class="lyric-line" data-time="20.5">Catch me or I go Houdini</div>
+
+  <!-- Verse 1 -->
+  <div class="lyric-line" data-time="23">Time is passin' like a solar eclipse</div>
+  <div class="lyric-line" data-time="26">See you watchin' and you blow me a kiss</div>
+  <div class="lyric-line" data-time="29">It's your moment, baby, don't let it slip</div>
+  <div class="lyric-line" data-time="32">Come in closer, are you readin' my lips?</div>
+
+  <!-- Chorus 2 -->
+  <div class="lyric-line" data-time="35">They say I come and I go</div>
+  <div class="lyric-line" data-time="37.5">Tell me all the ways you need me</div>
+  <div class="lyric-line" data-time="40.5">I'm not here for long</div>
+  <div class="lyric-line" data-time="43">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="45.5">I come and I go</div>
+  <div class="lyric-line" data-time="48">Prove you got the right to please me</div>
+  <div class="lyric-line" data-time="50.5">Everybody knows</div>
+  <div class="lyric-line" data-time="53">Catch me or I go Houdini</div>
+
+  <!-- Post-Chorus -->
+  <div class="lyric-line" data-time="56">If you're good enough, you'll find the way</div>
+  <div class="lyric-line" data-time="59">Maybe you could cause a girl to change (Her ways)</div>
+  <div class="lyric-line" data-time="62">Do you think about it night and day?</div>
+  <div class="lyric-line" data-time="65">Maybe you could be the one to make me stay</div>
+
+  <!-- Verse 2 -->
+  <div class="lyric-line" data-time="68">Everything you say is soundin' so sweet (Ah-ah)</div>
+  <div class="lyric-line" data-time="71">But do you practise everything that you preach? (Ah-ah)</div>
+  <div class="lyric-line" data-time="74">I need something that'll make me believe (Ah-ah)</div>
+  <div class="lyric-line" data-time="77">If you got it, baby, give it to me</div>
+
+  <!-- Chorus 3 -->
+  <div class="lyric-line" data-time="80">They say I come and I go</div>
+  <div class="lyric-line" data-time="82.5">Tell me all the ways you need me</div>
+  <div class="lyric-line" data-time="85.5">I'm not here for long</div>
+  <div class="lyric-line" data-time="88">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="90.5">I come and I go (I come and I go)</div>
+  <div class="lyric-line" data-time="93">Prove you got the right to please me</div>
+  <div class="lyric-line" data-time="95.5">Everybody knows (I'm not here for long)</div>
+  <div class="lyric-line" data-time="98">Catch me or I go Houdini</div>
+
+  <!-- Post-Chorus 2 -->
+  <div class="lyric-line" data-time="101">If you're good enough, you'll find the way</div>
+  <div class="lyric-line" data-time="104">Maybe you could cause a girl to change (Her ways)</div>
+  <div class="lyric-line" data-time="107">Do you think about it night and day?</div>
+  <div class="lyric-line" data-time="110">Maybe you could be the one to make me stay</div>
+
+  <!-- Bridge -->
+  <div class="lyric-line" data-time="113">Oh-oh</div>
+  <div class="lyric-line" data-time="114.5">Ooh</div>
+
+  <!-- Chorus 4 -->
+  <div class="lyric-line" data-time="116">I come and I go</div>
+  <div class="lyric-line" data-time="118.5">Tell me all the ways you need me (Ooh)</div>
+  <div class="lyric-line" data-time="121">I'm not here for long</div>
+  <div class="lyric-line" data-time="123.5">Catch me or I go Houdini</div>
+  <div class="lyric-line" data-time="126">I come and I go (I come and I go)</div>
+  <div class="lyric-line" data-time="128.5">Prove you got the right to please me</div>
+  <div class="lyric-line" data-time="131">Everybody knows (I'm not here for long)</div>
+  <div class="lyric-line" data-time="133.5">Catch me or I go Houdini</div>
+
+  <!-- Outro -->
+  <div class="lyric-line" data-time="136">Houdini (Ah)</div>
+  <div class="lyric-line" data-time="137.5">Catch me or I go Houdini</div>
+</div>
+
+<audio id="audio" src="houdini.mp3" controls></audio>
+
+<style>
+#lyrics-wrap { max-height:300px; overflow:auto; margin:10px 0; font-size:1.1rem; line-height:1.5; }
+.lyric-line { padding:8px; color:#aaa; transition:all .18s; }
+.lyric-line.active { background:#40E0D0; color:#000; font-weight:900; transform:scale(1.02); }
+</style>
+
+<script>
+const audio = document.getElementById('audio');
+const lyricNodes = Array.from(document.querySelectorAll('.lyric-line'));
+
+audio.addEventListener('timeupdate', () => {
+  const now = audio.currentTime;
+  let active = -1;
+  lyricNodes.forEach((line, idx) => {
+    const t = parseFloat(line.dataset.time);
+    if (now >= t) active = idx;
+  });
+  lyricNodes.forEach((line, idx) => {
+    if (idx === active) {
+      if (!line.classList.contains('active')) {
+        line.classList.add('active');
+        const wrap = document.getElementById('lyrics-wrap');
+        const wrapRect = wrap.getBoundingClientRect();
+        const lineRect = line.getBoundingClientRect();
+        const offset = lineRect.top - wrapRect.top - (wrapRect.height/2) + (lineRect.height/2);
+        wrap.scrollBy({ top: offset, behavior: 'smooth' });
+      }
+    } else line.classList.remove('active');
+  });
+});
+</script>
