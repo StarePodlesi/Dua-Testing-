@@ -7,16 +7,45 @@
 <style>
 body { margin:0; font-family:"Inter",sans-serif; background:#0f4f54; color:#fff; overflow:hidden;}
 button{cursor:pointer;}
-#lyrics-wrap { max-width:720px; margin:60px auto; font-size:1.3rem; line-height:1.8; overflow-y:auto; height:calc(100vh - 100px); padding-bottom:50px;}
+#lyrics-wrap { 
+    max-width:720px; 
+    margin:60px auto; 
+    font-size:1.3rem; 
+    line-height:1.8; 
+    overflow: hidden; /* odstraněn scrollbar */
+    height:calc(100vh - 100px); 
+    padding-bottom:50px;
+}
 .lyric-line { padding:4px; color:#ccc; transition:all .18s; }
 .lyric-line.active { color:#000; font-weight:900; background:linear-gradient(90deg,#40E0D0,#0f4f54); border-radius:4px; padding:4px 8px; }
-#mini-player{position:fixed; left:12px; right:12px; bottom:12px; background:linear-gradient(90deg,#40E0D0,#0f4f54); padding:12px; border-radius:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; box-shadow:0 12px 36px rgba(0,0,0,.5); z-index:1500;}
+#mini-player{
+    position:fixed; 
+    left:12px; right:12px; bottom:12px; 
+    background:linear-gradient(90deg,#40E0D0,#0f4f54); 
+    padding:12px; border-radius:12px; 
+    display:flex; align-items:center; justify-content:space-between; gap:12px; 
+    box-shadow:0 12px 36px rgba(0,0,0,.5); 
+    z-index:1500;
+}
 .mini-meta{overflow:hidden;min-width:0;}
 .mini-title{font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;}
 .controls button{width:52px;height:52px;border-radius:50%;border:0;background:#222;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.2);}
 .controls button:hover{transform:scale(1.04);background:#40E0D0;}
-#fullscreen-player{position:fixed; inset:0; display:none; align-items:flex-end; justify-content:flex-end; z-index:2000; overflow:hidden; background:rgba(0,0,0,0.7);}
-#fullscreen-info{position:relative; z-index:1500; width:100%; padding:36px 30px; background:linear-gradient(90deg,#40E0D0,#0f4f54); border-top-left-radius:18px; border-top-right-radius:18px; box-shadow:0 -18px 60px rgba(0,0,0,.25);}
+#fullscreen-player{
+    position:fixed; inset:0; 
+    display:none; 
+    align-items:flex-end; justify-content:flex-end; 
+    z-index:2000; 
+    overflow:hidden; 
+    background:rgba(0,0,0,0.7);
+}
+#fullscreen-info{
+    position:relative; z-index:1500; 
+    width:100%; padding:36px 30px; 
+    background:linear-gradient(90deg,#40E0D0,#0f4f54); 
+    border-top-left-radius:18px; border-top-right-radius:18px; 
+    box-shadow:0 -18px 60px rgba(0,0,0,.25);
+}
 .info-row{display:flex;align-items:center;justify-content:space-between;gap:16px;}
 #time-big{font-size:2.3rem;font-weight:900;color:#000;min-width:160px;text-align:right;}
 </style>
@@ -97,7 +126,7 @@ button{cursor:pointer;}
 
   <!-- Chorus -->
   <div class="lyric-line" data-time="200">[Chorus]</div>
-  <div class="lyric-line" data-time="200">I come and I go</div>
+  <div class="lyric-line" data-time="200">I come aI go</div>
   <div class="lyric-line" data-time="200">Tell me all the ways you need me (Ooh)</div>
   <div class="lyric-line" data-time="200">I'm not here for long</div>
   <div class="lyric-line" data-time="200">Catch me or I go Houdini</div>
@@ -176,3 +205,4 @@ audio.addEventListener('timeupdate', () => {
 
 </body>
 </html>
+
