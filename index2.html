@@ -1,361 +1,284 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Dua Lipa — Houdini Player</title>
-<link rel="icon" href="radical_optimism.jpg" type="image/x-icon">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dua Lipa – Houdini (Full Player)</title>
 <style>
-  /* Reset & base */
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%;font-family:Inter,Arial,sans-serif;background:#0f4f54;color:#fff;-webkit-font-smoothing:antialiased;}
-  button{cursor:pointer;border:0;background:transparent;color:inherit;font:inherit}
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #003b43;
+  color: white;
+  overflow: hidden;
+}
 
-  /* Header (bio + album) */
-  header{padding:40px 20px;text-align:center;background:#0f4f54}
-  header .hero{width:220px;height:220px;border-radius:50%;object-fit:cover;box-shadow:0 16px 60px rgba(0,0,0,.5);display:block;margin:0 auto 18px}
-  header h1{font-size:2rem;margin-bottom:10px}
-  header p{max-width:900px;margin:0 auto;color:#e6f7f6;line-height:1.6;padding:0 8px;text-align:justify}
+.player-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, #003b43 100%);
+}
 
-  /* Tracklist */
-  .tracklist{max-width:980px;margin:28px auto;padding:18px;border-radius:12px;background:rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(0,0,0,.35)}
-  .track{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:10px;cursor:pointer;transition:transform .12s,box-shadow .12s,background .12s}
-  .track:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.28);background:rgba(255,255,255,0.02)}
-  .track .num{width:36px;text-align:center;color:#a8dede;font-weight:800}
-  .track .title{font-weight:800;color:#fff;white-space:normal}
-  .track .duration{color:#cfeeea}
+.control-bar {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,128,128,0.5), rgba(0,128,128,0.2));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: height 0.4s ease;
+}
 
-  /* Mini player */
-  #mini-player{position:fixed;left:12px;right:12px;bottom:12px;background:linear-gradient(90deg,#40E0D0,#0f4f54);padding:12px;border-radius:12px;display:none;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 12px 36px rgba(0,0,0,.45);z-index:1500}
-  .mini-left{display:flex;align-items:center;gap:12px;min-width:0}
-  .mini-cover{width:66px;height:66px;border-radius:8px;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-  .mini-meta{overflow:hidden;min-width:0}
-  .mini-title{font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
-  #mini-time{color:#fff;font-weight:700;margin-left:6px;min-width:120px;text-align:right}
-  .mini-controls{display:flex;align-items:center;gap:8px}
-  .mini-controls button{width:44px;height:44px;border-radius:50%;background:#111;color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.25);font-size:18px}
+.control-bar.compact {
+  height: 120px;
+}
 
-  /* Fullscreen player */
-  #fullscreen-player{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:flex-end;z-index:2000;background:#0f4f54;overflow:hidden}
-  .bg-video-wrap{position:absolute;inset:0;z-index:0;overflow:hidden;opacity:1}
-  .bg-video-wrap video{width:100%;height:100%;object-fit:cover;display:block;filter:blur(6px) saturate(.9)}
-  #close-full{position:absolute;top:12px;right:12px;z-index:1600;background:rgba(0,0,0,0.55);color:#fff;padding:8px 10px;border-radius:8px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-  #fullscreen-info{position:relative;z-index:1500;width:100%;padding:22px 24px;background:linear-gradient(90deg, rgba(64,224,208,0.9), rgba(15,79,84,0.95));border-top-left-radius:16px;border-top-right-radius:16px;backdrop-filter:blur(6px)}
-  .info-row{display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer}
-  .title-big{font-size:1.5rem;font-weight:900;color:#fff;max-width:60%;line-height:1.05}
-  .controls{display:flex;align-items:center;gap:12px}
-  .controls button{width:48px;height:48px;border-radius:50%;background:#111;color:#fff;font-size:18px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
-  .controls button:hover{transform:scale(1.04);background:#40E0D0}
-  #time-big{font-size:1.3rem;font-weight:900;color:#fff;min-width:140px;text-align:right}
-  .progress-wrap{width:100%;margin-top:12px}
-  .progress-bar{width:100%;height:12px;background:rgba(255,255,255,0.12);border-radius:8px;overflow:hidden;cursor:pointer}
-  .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#40E0D0,#0ff);border-radius:8px;transition:width .06s linear}
+.control-bar.expanded {
+  height: 85vh;
+  overflow-y: auto;
+}
 
-  /* Lyrics area (inside fullscreen under progress) */
-  .lyrics-container{margin-top:14px;max-height:38vh;overflow:auto;padding:8px 6px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));scrollbar-width:none}
-  .lyrics-container::-webkit-scrollbar{display:none}
-  .lyric-line{padding:6px 10px;color:#d6f6f3;border-radius:6px;transition:all .18s}
-  .lyric-line.label{opacity:.9;color:#cdeeea;font-weight:700}
-  .lyric-line.active{background:linear-gradient(90deg,#40E0D0,#0ff);color:#001;font-weight:900;transform:scale(1.01)}
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 10px;
+}
 
-  /* responsive */
-  @media(max-width:720px){
-    .title-big{font-size:1.1rem}
-    #time-big{font-size:1rem}
-    .lyrics-container{max-height:30vh}
-  }
+button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 26px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+button:hover { transform: scale(1.2); }
+
+.progress-container {
+  width: 80%;
+  height: 6px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.progress {
+  width: 0%;
+  height: 100%;
+  background: white;
+  border-radius: 5px;
+}
+
+.time {
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin-bottom: 8px;
+}
+
+.lyrics {
+  width: 80%;
+  margin-top: 10px;
+  text-align: center;
+  line-height: 1.8;
+  transition: opacity 0.4s ease;
+}
+
+.lyrics p {
+  opacity: 0.4;
+  transition: opacity 0.2s;
+  margin: 4px 0;
+}
+
+.lyrics p.active {
+  opacity: 1;
+  font-weight: 600;
+  color: #00ffff;
+}
+
+.toggle-lyrics {
+  margin-top: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #aad;
+}
 </style>
 </head>
 <body>
 
-<header>
-  <img class="hero" src="Dua_Lipa.jpg" alt="Dua Lipa" loading="lazy">
-  <h1>Dua Lipa — Radical Optimism (2024)</h1>
-  <p>
-    Dua Lipa je britská zpěvačka, skladatelka a herečka (nar. 22.8.1995). Proslavila se debutem „Dua Lipa“ (2017) a dalším úspěchem „Future Nostalgia“ (2020). 
-    Album <strong>Radical Optimism</strong> (2024) kombinuje taneční pop, disco a moderní elektroniku. Klikni na skladbu pro přehrávání a zobrazení synchronizovaných textů.
-  </p>
-</header>
-
-<div class="tracklist" id="tracklist" aria-label="Seznam skladeb"></div>
-
-<!-- Mini player -->
-<div id="mini-player" aria-hidden="true">
-  <div class="mini-left">
-    <img id="mini-cover" class="mini-cover" src="radical_optimism.jpg" alt="cover" loading="lazy">
-    <div class="mini-meta">
-      <div id="mini-title" class="mini-title">—</div>
-      <div id="mini-time">0:00 / 0:00</div>
+<div class="player-container">
+  <div class="control-bar compact" id="controlBar">
+    <div class="controls">
+      <button id="playPause">▶️</button>
+      <button id="restart">⏮️</button>
     </div>
-  </div>
-  <div class="mini-controls">
-    <button id="mini-prev" title="Předchozí">⏮</button>
-    <button id="mini-play" title="Přehrát / Pauza">▶</button>
-    <button id="mini-next" title="Další">⏭</button>
-    <button id="mini-expand" title="Rozbalit">⬆</button>
+
+    <div class="progress-container" id="progressContainer">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="time">
+      <span id="currentTime">0:00</span>
+      <span id="duration">0:00</span>
+    </div>
+
+    <div class="toggle-lyrics" id="toggleLyrics">Zobrazit text 🎵</div>
+
+    <div class="lyrics" id="lyrics" style="display: none;">
+      <p>[Intro]</p>
+      <p>Okay</p>
+      <p>Mm, ah</p>
+
+      <p>[Chorus]</p>
+      <p>I come and I go</p>
+      <p>Tell me all the ways you need me</p>
+      <p>I'm not here for long</p>
+      <p>Catch me or I go Houdini</p>
+      <p>I come and I go</p>
+      <p>Prove you got the right to please me</p>
+      <p>Everybody knows</p>
+      <p>Catch me or I go Houdini</p>
+
+      <p>[Verse 1]</p>
+      <p>Time is passin' like a solar eclipse</p>
+      <p>See you watchin' and you blow me a kiss</p>
+      <p>It's your moment, baby, don't let it slip</p>
+      <p>Come in closer, are you readin' my lips?</p>
+
+      <p>[Chorus]</p>
+      <p>They say I come and I go</p>
+      <p>Tell me all the ways you need me</p>
+      <p>I'm not here for long</p>
+      <p>Catch me or I go Houdini</p>
+      <p>I come and I go</p>
+      <p>Prove you got the right to please me</p>
+      <p>Everybody knows</p>
+      <p>Catch me or I go Houdini</p>
+
+      <p>[Post-Chorus]</p>
+      <p>If you're good enough, you'll find the way</p>
+      <p>Maybe you could cause a girl to change (Her ways)</p>
+      <p>Do you think about it night and day?</p>
+      <p>Maybe you could be the one to make me stay</p>
+
+      <p>[Verse 2]</p>
+      <p>Everything you say is soundin' so sweet (Ah-ah)</p>
+      <p>But do you practise everything that you preach? (Ah-ah)</p>
+      <p>I need something that'll make me believe (Ah-ah)</p>
+      <p>If you got it, baby, give it to me</p>
+
+      <p>[Chorus]</p>
+      <p>They say I come and I go</p>
+      <p>Tell me all the ways you need me</p>
+      <p>I'm not here for long</p>
+      <p>Catch me or I go Houdini</p>
+      <p>I come and I go (I come and I go)</p>
+      <p>Prove you got the right to please me</p>
+      <p>Everybody knows (I'm not here for long)</p>
+      <p>Catch me or I go Houdini</p>
+
+      <p>[Post-Chorus]</p>
+      <p>If you're good enough, you'll find the way</p>
+      <p>Maybe you could cause a girl to change (Her ways)</p>
+      <p>Do you think about it night and day?</p>
+      <p>Maybe you could be the one to make me stay</p>
+
+      <p>[Bridge]</p>
+      <p>Oh-oh</p>
+      <p>Ooh</p>
+
+      <p>[Chorus]</p>
+      <p>I come and I go</p>
+      <p>Tell me all the ways you need me (Ooh)</p>
+      <p>I'm not here for long</p>
+      <p>Catch me or I go Houdini</p>
+      <p>I come and I go (I come and I go)</p>
+      <p>Prove you got the right to please me</p>
+      <p>Everybody knows (I'm not here for long)</p>
+      <p>Catch me or I go Houdini</p>
+
+      <p>[Outro]</p>
+      <p>Houdini (Ah)</p>
+      <p>Catch me or I go Houdini</p>
+    </div>
   </div>
 </div>
 
-<!-- Fullscreen player -->
-<div id="fullscreen-player" aria-hidden="true">
-  <div class="bg-video-wrap" id="bg-video-wrap">
-    <video id="bg-video" autoplay muted loop playsinline preload="none"></video>
-  </div>
-
-  <button id="close-full" title="Zavřít přehrávač">✖</button>
-
-  <div id="fullscreen-info" aria-hidden="true">
-    <div class="info-row" id="fs-header">
-      <div class="title-big" id="fs-title">—</div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <div id="time-big">0:00 / 0:00</div>
-        <div class="controls" role="group" aria-label="Ovládání">
-          <button id="prev-btn" title="Předchozí">⏮</button>
-          <button id="play-btn" title="Přehrát / Pauza">▶</button>
-          <button id="next-btn" title="Další">⏭</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="progress-wrap">
-      <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-fill" id="progress-fill"></div>
-      </div>
-    </div>
-
-    <!-- Lyrics shown in fullscreen under the progress -->
-    <div class="lyrics-container" id="lyrics-container" aria-live="polite"></div>
-  </div>
-</div>
-
-<audio id="audio" preload="none"></audio>
+<audio id="audio" src="kouzelník.mp3"></audio>
 
 <script>
-const tracks = [
-  {num:1,title:"End Of An Era",mp3:"mech.mp3",mp4:"a82x20.mp4",duration:"3:15"},
-  {num:2,title:"Houdini",mp3:"kouzelník.mp3",mp4:"a82xf4.mp4",duration:"3:08"},
-  {num:3,title:"Training Season",mp3:"60m.mp3",mp4:"a82xvv.mp4",duration:"3:46"},
-  {num:4,title:"These Walls",mp3:"zeď.mp3",mp4:"a82xxp.mp4",duration:"3:37"},
-  {num:5,title:"Whatcha Doing",mp3:"Co.mp3",mp4:"a82ywb.mp4",duration:"3:17"},
-  {num:6,title:"French Exit",mp3:"Francosisch.mp3",mp4:"a82yxv.mp4",duration:"3:21"},
-  {num:7,title:"Illusion",mp3:"Iluze.mp3",mp4:"a82zdu.mp4",duration:"3:09"},
-  {num:8,title:"Falling Forever",mp3:"Padat.mp3",mp4:"a82zjs.mp4",duration:"3:42"},
-  {num:9,title:"Anything For Love",mp3:"Láska.mp3",mp4:"a82zlw.mp4",duration:"2:21"},
-  {num:10,title:"Maria",mp3:"Marie.mp3",mp4:"a82zxw.mp4",duration:"3:07"},
-  {num:11,title:"Happy For You",mp3:"Pro tebe.mp3",mp4:"a83003.mp4",duration:"4:04"}
-];
-
-const tracklistDiv = document.getElementById('tracklist');
-const miniPlayer = document.getElementById('mini-player');
-const miniTitle = document.getElementById('mini-title');
-const miniCover = document.getElementById('mini-cover');
-const miniPlay = document.getElementById('mini-play');
-const miniPrev = document.getElementById('mini-prev');
-const miniNext = document.getElementById('mini-next');
-const miniExpand = document.getElementById('mini-expand');
-const miniTime = document.getElementById('mini-time');
-
-const fsPlayer = document.getElementById('fullscreen-player');
-const fsTitle = document.getElementById('fs-title');
-const bgVideo = document.getElementById('bg-video');
-const closeFull = document.getElementById('close-full');
-const playBtn = document.getElementById('play-btn');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-const progressBar = document.getElementById('progress-bar');
-const progressFill = document.getElementById('progress-fill');
-const timeBig = document.getElementById('time-big');
-const lyricsContainer = document.getElementById('lyrics-container');
-const fsHeader = document.getElementById('fs-header');
-
 const audio = document.getElementById('audio');
+const playPause = document.getElementById('playPause');
+const restart = document.getElementById('restart');
+const progressContainer = document.getElementById('progressContainer');
+const progress = document.getElementById('progress');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+const lyricsContainer = document.getElementById('lyrics');
+const toggleLyrics = document.getElementById('toggleLyrics');
+const controlBar = document.getElementById('controlBar');
 
-let currentIndex = null;
-let lyricsMap = {};
-let lyricNodes = [];
-let lyricTimer = null;
+let lyricsVisible = false;
 
-/* ===== sample lyrics for Houdini ===== */
-lyricsMap[1] = [
-  {t:0,text:"[Intro]"},
-  {t:3.9,text:"Okay"},
-  {t:11.9,text:"Mm, ah"},
-  
-  {t:20.9,text:"[Chorus]"},
-  {t:20.9,text:"I come and I go"},
-  {t:23.0,text:"Tell me all the ways you need me"},
-  {t:25.0,text:"I'm not here for long"},
-  {t:27.0,text:"Catch me or I go Houdini"},
-  {t:29.0,text:"I come and I go"},
-  {t:31.2,text:"Prove you got the right to please me"},
-  {t:33.1,text:"Everybody knows"},
-  {t:35.1,text:"Catch me or I go Houdini"},
-
-  {t:37.9,text:"[Verse 1]"},
-  {t:37.9,text:"Time is passin' like a solar eclipse"},
-  {t:41.7,text:"See you watchin' and you blow me a kiss"},
-  {t:45.9,text:"It's your moment, baby, don't let it slip"},
-  {t:50.1,text:"Come in closer, are you readin' my lips?"},
-
-  {t:52.9,text:"[Chorus]"},
-  {t:52.9,text:"They say I come and I go"},
-  {t:55.7,text:"Tell me all the ways you need me"},
-  {t:57.7,text:"I'm not here for long"},
-  {t:59.7,text:"Catch me or I go Houdini"},
-  {t:61.8,text:"I come and I go"},
-  {t:63.9,text:"Prove you got the right to please me"},
-  {t:66.0,text:"Everybody knows"},
-  {t:68.0,text:"Catch me or I go Houdini"},
-
-  {t:70.7,text:"[Post-Chorus]"},
-  {t:70.7,text:"If you're good enough, you'll find the way"},
-  {t:74.9,text:"Maybe you could cause a girl to change (Her ways)"},
-  {t:79.0,text:"Do you think about it night and day?"},
-  {t:83.1,text:"Maybe you could be the one to make me stay"},
-
-  {t:87.3,text:"[Verse 2]"},
-  {t:87.3,text:"Everything you say is soundin' so sweet (Ah-ah)"},
-  {t:90.7,text:"But do you practise everything that you preach? (Ah-ah)"},
-  {t:94.8,text:"I need something that'll make me believe (Ah-ah)"},
-  {t:98.8,text:"If you got it, baby, give it to me"},
-
-  {t:102.3,text:"[Chorus]"},
-  {t:102.3,text:"They say I come and I go"},
-  {t:104.9,text:"Tell me all the ways you need me"},
-  {t:106.8,text:"I'm not here for long"},
-  {t:108.9,text:"Catch me or I go Houdini"},
-  {t:111.0,text:"I come and I go (I come and I go)"},
-  {t:113.0,text:"Prove you got the right to please me"},
-  {t:115.0,text:"Everybody knows (I'm not here for long)"},
-  {t:117.0,text:"Catch me or I go Houdini"},
-
-  {t:119.8,text:"[Post-Chorus]"},
-  {t:119.8,text:"If you're good enough, you'll find the way"},
-  {t:124.0,text:"Maybe you could cause a girl to change (Her ways)"},
-  {t:128.3,text:"Do you think about it night and day?"},
-  {t:132.2,text:"Maybe you could be the one to make me stay"},
-
-  {t:143.0,text:"[Bridge]"},
-  {t:143.0,text:"Oh-oh"},
-  {t:146.6,text:"Ooh"},
-
-  {t:152.0,text:"[Chorus]"},
-  {t:152.0,text:"I come and I go"},
-  {t:154.0,text:"Tell me all the ways you need me (Ooh)"},
-  {t:156.0,text:"I'm not here for long"},
-  {t:158.0,text:"Catch me or I go Houdini"},
-  {t:160.1,text:"I come and I go (I come and I go)"},
-  {t:162.2,text:"Prove you got the right to please me"},
-  {t:164.2,text:"Everybody knows (I'm not here for long)"},
-  {t:166.3,text:"Catch me or I go Houdini"},
-
-  {t:175.7,text:"[Outro]"},
-  {t:175.7,text:"Houdini (Ah)"},
-  {t:182.6,text:"Catch me or I go Houdini"}
-];
-
-/* ===== helpers ===== */
-function formatTime(t){ if(!t||isNaN(t)) return '0:00'; const m=Math.floor(t/60); const s=Math.floor(t%60); return m+':' + (s<10?'0'+s:s); }
-
-function renderLyricsFor(index){
-  lyricsContainer.innerHTML=''; lyricNodes=[];
-  const lines = lyricsMap[index]||[];
-  lines.forEach(ln=>{
-    const div=document.createElement('div');
-    div.className = (ln.text.startsWith('[')?'lyric-line label':'lyric-line');
-    div.dataset.time=String(ln.t);
-    div.textContent=ln.text;
-    lyricsContainer.appendChild(div);
-    lyricNodes.push(div);
-  });
-  lyricsContainer.scrollTop=0;
-}
-
-function updateLyricsHighlight(){
-  if(!lyricNodes.length) return;
-  const ct=audio.currentTime;
-  let activeIdx=-1;
-  for(let i=0;i<lyricNodes.length;i++){
-    const t=parseFloat(lyricNodes[i].dataset.time||0);
-    if(ct>=t) activeIdx=i; else break;
+// přehrávání
+playPause.addEventListener('click', () => {
+  if (audio.paused) {
+    audio.play();
+    playPause.textContent = '⏸️';
+  } else {
+    audio.pause();
+    playPause.textContent = '▶️';
   }
-  lyricNodes.forEach((n,idx)=>n.classList.toggle('active', idx===activeIdx));
-  if(activeIdx>=0){
-    const node=lyricNodes[activeIdx];
-    const container=lyricsContainer;
-    const desired=node.offsetTop-(container.clientHeight/2)+(node.clientHeight/2);
-    container.scrollTo({top:desired,behavior:'smooth'});
+});
+
+// restart
+restart.addEventListener('click', () => {
+  audio.currentTime = 0;
+});
+
+// čas + progress
+audio.addEventListener('timeupdate', () => {
+  const progressPercent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = `${progressPercent}%`;
+
+  const currentMinutes = Math.floor(audio.currentTime / 60);
+  const currentSeconds = Math.floor(audio.currentTime % 60);
+  const durationMinutes = Math.floor(audio.duration / 60);
+  const durationSeconds = Math.floor(audio.duration % 60);
+  currentTimeEl.textContent = `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')}`;
+  durationEl.textContent = `${durationMinutes}:${durationSeconds.toString().padStart(2, '0')}`;
+});
+
+// kliknutí na progress bar
+progressContainer.addEventListener('click', (e) => {
+  const width = progressContainer.clientWidth;
+  const clickX = e.offsetX;
+  const duration = audio.duration;
+  audio.currentTime = (clickX / width) * duration;
+});
+
+// přepnutí textu
+toggleLyrics.addEventListener('click', () => {
+  lyricsVisible = !lyricsVisible;
+  if (lyricsVisible) {
+    controlBar.classList.add('expanded');
+    lyricsContainer.style.display = 'block';
+    toggleLyrics.textContent = 'Skrýt text 🔽';
+  } else {
+    controlBar.classList.remove('expanded');
+    lyricsContainer.style.display = 'none';
+    toggleLyrics.textContent = 'Zobrazit text 🎵';
   }
-}
-
-function updateUI(){
-  const current=formatTime(audio.currentTime);
-  const total=formatTime(audio.duration);
-  timeBig.textContent=`${current} / ${total}`;
-  miniTime.textContent=`${current} / ${total}`;
-  const pct=audio.duration?(audio.currentTime/audio.duration)*100:0;
-  progressFill.style.width=pct+'%';
-}
-
-function playTrack(index){
-  const track=tracks[index];
-  if(!track) return;
-  currentIndex=index;
-  audio.src=track.mp3;
-  bgVideo.src=track.mp4;
-  fsTitle.textContent=track.title;
-  miniTitle.textContent=track.title;
-  miniCover.src='radical_optimism.jpg';
-  audio.play();
-  miniPlayer.style.display='flex';
-  fsPlayer.style.display='flex';
-  renderLyricsFor(index);
-}
-
-/* ===== tracklist ===== */
-tracks.forEach((t,i)=>{
-  const div=document.createElement('div');
-  div.className='track';
-  div.innerHTML=`<div class="num">${t.num}</div><div class="title">${t.title}</div><div class="duration">${t.duration}</div>`;
-  div.addEventListener('click',()=>playTrack(i));
-  tracklistDiv.appendChild(div);
 });
-
-/* ===== controls ===== */
-playBtn.addEventListener('click',()=>audio.paused?audio.play():audio.pause());
-miniPlay.addEventListener('click',()=>audio.paused?audio.play():audio.pause());
-prevBtn.addEventListener('click',()=>{if(currentIndex>0)playTrack(currentIndex-1)});
-nextBtn.addEventListener('click',()=>{if(currentIndex<tracks.length-1)playTrack(currentIndex+1)});
-miniPrev.addEventListener('click',()=>{if(currentIndex>0)playTrack(currentIndex-1)});
-miniNext.addEventListener('click',()=>{if(currentIndex<tracks.length-1)playTrack(currentIndex+1)});
-
-closeFull.addEventListener('click',()=>fsPlayer.style.display='none');
-miniExpand.addEventListener('click',()=>fsPlayer.style.display='flex');
-
-/* progress bar seeking */
-progressBar.addEventListener('click',e=>{
-  const rect=progressBar.getBoundingClientRect();
-  const pct=(e.clientX-rect.left)/rect.width;
-  audio.currentTime=audio.duration*pct;
-});
-
-/* ===== toggle lyrics on header click ===== */
-let lyricsVisible=true;
-fsHeader.addEventListener('click',()=>{
-  lyricsVisible=!lyricsVisible;
-  lyricsContainer.style.display=lyricsVisible?'block':'none';
-});
-
-/* ===== audio timeupdate ===== */
-audio.addEventListener('timeupdate',()=>{
-  updateUI();
-  updateLyricsHighlight();
-});
-audio.addEventListener('play',()=>playBtn.textContent='⏸');
-audio.addEventListener('pause',()=>playBtn.textContent='▶');
-audio.addEventListener('play',()=>miniPlay.textContent='⏸');
-audio.addEventListener('pause',()=>miniPlay.textContent='▶');
-audio.addEventListener('ended',()=>{if(currentIndex<tracks.length-1)playTrack(currentIndex+1)});
 </script>
 
 </body>
