@@ -15,24 +15,24 @@ button{cursor:pointer;border:0;background:transparent;color:inherit;font:inherit
 header{padding:40px 20px;text-align:center;background:#0f4f54}
 header .hero{width:220px;height:220px;border-radius:50%;object-fit:cover;box-shadow:0 16px 60px rgba(0,0,0,.5);display:block;margin:0 auto 18px}
 header h1{font-size:2rem;margin-bottom:10px}
-header p{max-width:900px;margin:0 auto;color:#e6f7f6;line-height:1.6;padding:0 8px;text-align:justify}
+header p{max-width:900px;margin:0 auto;color:#e6f7f6;line-height:1.6;padding:0 8px;text-align:justify;word-break:break-word}
 
 /* Tracklist */
 .tracklist{max-width:980px;margin:28px auto;padding:18px;border-radius:12px;background:rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(0,0,0,.35)}
-.track{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:10px;cursor:pointer;transition:transform .12s,box-shadow .12s,background .12s}
+.track{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:10px;cursor:pointer;transition:transform .12s,box-shadow .12s,background .12s;flex-wrap:wrap}
 .track:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.28);background:rgba(255,255,255,0.02)}
 .track .num{width:36px;text-align:center;color:#a8dede;font-weight:800}
-.track .title{font-weight:800;color:#fff;white-space:normal}
-.track .duration{color:#cfeeea}
+.track .title{font-weight:800;color:#fff;white-space:normal;word-break:break-word;flex:1;min-width:0;margin-left:8px}
+.track .duration{color:#cfeeea;white-space:nowrap}
 
 /* Mini player */
-#mini-player{position:fixed;left:12px;right:12px;bottom:12px;background:linear-gradient(90deg,#40E0D0,#0f4f54);padding:12px;border-radius:12px;display:none;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 12px 36px rgba(0,0,0,.45);z-index:1500}
-.mini-left{display:flex;align-items:center;gap:12px;min-width:0}
+#mini-player{position:fixed;left:12px;right:12px;bottom:12px;background:linear-gradient(90deg,#40E0D0,#0f4f54);padding:12px;border-radius:12px;display:none;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 12px 36px rgba(0,0,0,.45);z-index:1500;flex-wrap:wrap}
+.mini-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1;min-width:0}
 .mini-cover{width:66px;height:66px;border-radius:8px;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.mini-meta{overflow:hidden;min-width:0}
-.mini-title{font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
+.mini-meta{overflow:hidden;min-width:0;flex:1;word-break:break-word}
+.mini-title{font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 #mini-time{color:#fff;font-weight:700;margin-left:6px;min-width:120px;text-align:right}
-.mini-controls{display:flex;align-items:center;gap:8px}
+.mini-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .mini-controls button{width:44px;height:44px;border-radius:50%;background:#111;color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.25);font-size:18px}
 
 /* Fullscreen player */
@@ -41,20 +41,20 @@ header p{max-width:900px;margin:0 auto;color:#e6f7f6;line-height:1.6;padding:0 8
 .bg-video-wrap video{width:100%;height:100%;object-fit:cover;display:block;filter:blur(6px) saturate(.9);transform:scale(1.02)}
 #close-full{position:absolute;top:12px;right:12px;z-index:1600;background:rgba(0,0,0,0.55);color:#fff;padding:8px 10px;border-radius:8px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 #fullscreen-info{position:relative;z-index:1500;width:100%;padding:22px 24px;background:linear-gradient(90deg, rgba(64,224,208,0.9), rgba(15,79,84,0.95));border-top-left-radius:16px;border-top-right-radius:16px;backdrop-filter:blur(6px)}
-.info-row{display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer}
-.title-big{font-size:1.5rem;font-weight:900;color:#fff;max-width:60%;line-height:1.05}
-.controls{display:flex;align-items:center;gap:12px}
+.info-row{display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;flex-wrap:wrap}
+.title-big{font-size:1.5rem;font-weight:900;color:#fff;max-width:60%;line-height:1.05;word-break:break-word;flex:1;min-width:0}
+.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .controls button{width:48px;height:48px;border-radius:50%;background:#111;color:#fff;font-size:18px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
 .controls button:hover{transform:scale(1.04);background:#40E0D0}
-#time-big{font-size:1.3rem;font-weight:900;color:#fff;min-width:140px;text-align:right}
+#time-big{font-size:1.3rem;font-weight:900;color:#fff;min-width:140px;text-align:right;white-space:nowrap}
 .progress-wrap{width:100%;margin-top:12px}
 .progress-bar{width:100%;height:12px;background:rgba(255,255,255,0.12);border-radius:8px;overflow:hidden;cursor:pointer}
 .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#40E0D0,#0ff);border-radius:8px;transition:width .06s linear}
 
 /* Lyrics area (inside fullscreen under progress) */
-.lyrics-container{margin-top:14px;max-height:48vh;overflow:auto;padding:8px 6px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));scrollbar-width:none}
+.lyrics-container{margin-top:14px;max-height:48vh;overflow:auto;padding:8px 6px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));scrollbar-width:none;word-break:break-word}
 .lyrics-container::-webkit-scrollbar{display:none}
-.lyric-line{padding:6px 10px;color:#d6f6f3;border-radius:6px;transition:all .18s}
+.lyric-line{padding:6px 10px;color:#d6f6f3;border-radius:6px;transition:all .18s;word-break:break-word}
 .lyric-line.label{opacity:.9;color:#cdeeea;font-weight:700}
 .lyric-line.active{background:linear-gradient(90deg,#40E0D0,#0ff);color:#001;font-weight:900;transform:scale(1.01)}
 
@@ -63,6 +63,11 @@ header p{max-width:900px;margin:0 auto;color:#e6f7f6;line-height:1.6;padding:0 8
   .title-big{font-size:1.1rem}
   #time-big{font-size:1rem}
   .lyrics-container{max-height:30vh}
+  .track{flex-direction:column;align-items:flex-start}
+  .track .duration{margin-top:6px}
+  #mini-player{flex-direction:column;align-items:flex-start}
+  .mini-controls{justify-content:flex-start;width:100%}
+  .mini-meta{margin-top:6px}
 }
 </style>
 </head>
@@ -107,7 +112,7 @@ header p{max-width:900px;margin:0 auto;color:#e6f7f6;line-height:1.6;padding:0 8
   <div id="fullscreen-info" aria-hidden="true">
     <div class="info-row" id="fs-header">
       <div class="title-big" id="fs-title">—</div>
-      <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
         <div id="time-big">0:00 / 0:00</div>
         <div class="controls" role="group" aria-label="Ovládání">
           <button id="prev-btn" title="Předchozí">⏮</button>
@@ -183,7 +188,6 @@ lyricsMap[1] = [
   {t:0,text:"[Intro]"},
   {t:3.9,text:"Okay"},
   {t:11.9,text:"Mm, ah"},
-
   {t:20.9,text:"[Chorus]"},
   {t:20.9,text:"I come and I go"},
   {t:23.0,text:"Tell me all the ways you need me"},
@@ -193,13 +197,11 @@ lyricsMap[1] = [
   {t:31.2,text:"Prove you got the right to please me"},
   {t:33.1,text:"Everybody knows"},
   {t:35.1,text:"Catch me or I go Houdini"},
-
   {t:37.9,text:"[Verse 1]"},
   {t:37.9,text:"Time is passin' like a solar eclipse"},
   {t:41.7,text:"See you watchin' and you blow me a kiss"},
   {t:45.9,text:"It's your moment, baby, don't let it slip"},
   {t:50.1,text:"Come in closer, are you readin' my lips?"},
-
   {t:52.9,text:"[Chorus]"},
   {t:52.9,text:"They say I come and I go"},
   {t:55.7,text:"Tell me all the ways you need me"},
@@ -209,19 +211,16 @@ lyricsMap[1] = [
   {t:63.9,text:"Prove you got the right to please me"},
   {t:66.0,text:"Everybody knows"},
   {t:68.0,text:"Catch me or I go Houdini"},
-
   {t:70.7,text:"[Post-Chorus]"},
   {t:70.7,text:"If you're good enough, you'll find the way"},
   {t:74.9,text:"Maybe you could cause a girl to change (Her ways)"},
   {t:79.0,text:"Do you think about it night and day?"},
   {t:83.1,text:"Maybe you could be the one to make me stay"},
-
   {t:87.3,text:"[Verse 2]"},
   {t:87.3,text:"Everything you say is soundin' so sweet (Ah-ah)"},
   {t:90.7,text:"But do you practise everything that you preach? (Ah-ah)"},
   {t:94.8,text:"I need something that'll make me believe (Ah-ah)"},
   {t:98.8,text:"If you got it, baby, give it to me"},
-
   {t:102.3,text:"[Chorus]"},
   {t:102.3,text:"They say I come and I go"},
   {t:104.9,text:"Tell me all the ways you need me"},
@@ -231,196 +230,101 @@ lyricsMap[1] = [
   {t:113.0,text:"Prove you got the right to please me"},
   {t:115.0,text:"Everybody knows (I'm not here for long)"},
   {t:117.0,text:"Catch me or I go Houdini"},
-
-  {t:119.8,text:"[Post-Chorus]"},
-  {t:119.8,text:"If you're good enough, you'll find the way"},
-  {t:124.0,text:"Maybe you could cause a girl to change (Her ways)"},
-  {t:128.3,text:"Do you think about it night and day?"},
-  {t:132.2,text:"Maybe you could be the one to make me stay"},
-
-  {t:143.0,text:"[Bridge]"},
-  {t:143.0,text:"Oh-oh"},
-  {t:146.6,text:"Ooh"},
-
-  {t:152.0,text:"[Chorus]"},
-  {t:152.0,text:"I come and I go"},
-  {t:154.0,text:"Tell me all the ways you need me (Ooh)"},
-  {t:156.0,text:"I'm not here for long"},
-  {t:158.0,text:"Catch me or I go Houdini"},
-  {t:160.1,text:"I come and I go (I come and I go)"},
-  {t:162.2,text:"Prove you got the right to please me"},
-  {t:164.2,text:"Everybody knows (I'm not here for long)"},
-  {t:166.3,text:"Catch me or I go Houdini"},
-
-  {t:175.7,text:"[Outro]"},
-  {t:175.7,text:"Houdini (Ah)"},
-  {t:182.6,text:"Catch me or I go Houdini"}
+  {t:119.0,text:"[Outro]"},
+  {t:119.0,text:"I come and I go"},
+  {t:121.0,text:"Catch me or I go Houdini"},
+  {t:123.0,text:"Mm, ah"}
 ];
 
-/* ===== helpers ===== */
-function formatTime(t){ if(!t||isNaN(t)) return '0:00'; const m=Math.floor(t/60); const s=Math.floor(t%60); return m+':' + (s<10?'0'+s:s); }
-
-/* render lyrics for current track index */
-function renderLyricsFor(index){
-  lyricsContainer.innerHTML = '';
-  lyricNodes = [];
-  const lines = lyricsMap[index] || [];
-  lines.forEach(ln => {
-    const div = document.createElement('div');
-    div.className = (ln.text && ln.text.startsWith('[')) ? 'lyric-line label' : 'lyric-line';
-    div.dataset.time = String(ln.t);
-    div.textContent = ln.text;
-    lyricsContainer.appendChild(div);
-    lyricNodes.push(div);
-  });
-  lyricsContainer.scrollTop = 0;
-}
-
-/* highlight & autoscroll */
-function updateLyricsHighlight(){
-  if(!lyricNodes.length) return;
-  const ct = audio.currentTime;
-  let activeIdx = -1;
-  for(let i=0;i<lyricNodes.length;i++){
-    const t = parseFloat(lyricNodes[i].dataset.time || 0);
-    if(ct >= t) activeIdx = i;
-    else break;
-  }
-  lyricNodes.forEach((n, idx) => n.classList.toggle('active', idx === activeIdx));
-  if(activeIdx >= 0){
-    const node = lyricNodes[activeIdx];
-    const container = lyricsContainer;
-    const desired = node.offsetTop - (container.clientHeight/2) + (node.clientHeight/2);
-    container.scrollTo({ top: desired, behavior: 'smooth' });
-  }
-}
-
-/* update UI times, progress and play/pause icons */
-function updateUI(){
-  const current = formatTime(audio.currentTime);
-  const total = formatTime(audio.duration);
-  timeBig.textContent = `${current} / ${total}`;
-  miniTime.textContent = `${current} / ${total}`;
-  const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
-  progressFill.style.width = pct + '%';
-  // buttons
-  miniPlay.textContent = audio.paused ? '▶' : '⏸';
-  playBtn.textContent = audio.paused ? '▶' : '⏸';
-}
-
-/* play a track by index */
-function playTrack(index){
-  if(index == null || !tracks[index]) return;
-  currentIndex = index;
-  const t = tracks[index];
-  // lazy load audio/video
-  if(audio.src !== t.mp3) {
-    audio.src = t.mp3;
-  }
-  if(bgVideo && t.mp4) {
-    // set src and load video
-    if(bgVideo.getAttribute('src') !== t.mp4){
-      bgVideo.setAttribute('src', t.mp4);
-      try { bgVideo.load(); } catch(e){}
-    }
-  }
-  fsTitle.textContent = t.title;
-  miniTitle.textContent = t.title;
-  miniCover.src = t.cover || 'radical_optimism.jpg';
-  // show mini & fullscreen
-  miniPlayer.style.display = 'flex';
-  fsPlayer.style.display = 'flex';
-  fsPlayer.setAttribute('aria-hidden','false');
-  // render lyrics if present for this index
-  renderLyricsFor(index);
-  // play audio
-  audio.play().catch(()=>{ /* user gesture might be required */ });
-  updateUI();
-}
-
-/* build tracklist */
-tracks.forEach((t, i) => {
+/* ===== build tracklist ===== */
+tracks.forEach((track,i)=>{
   const div = document.createElement('div');
-  div.className = 'track';
-  div.innerHTML = `<div style="display:flex;gap:12px;align-items:center"><div class="num">${t.num}</div><div class="title">${t.title}</div></div><div class="duration">${t.duration}</div>`;
-  div.addEventListener('click', () => playTrack(i));
+  div.className='track';
+  div.innerHTML=`<div class="num">${track.num}</div><div class="title">${track.title}</div><div class="duration">${track.duration}</div>`;
+  div.addEventListener('click',()=>playTrack(i));
   tracklistDiv.appendChild(div);
 });
 
-/* controls wiring */
-miniPlay.addEventListener('click', () => {
-  if(!audio.src){
-    // default to Houdini if available, else first
-    const idx = tracks.findIndex(x=>x.title.toLowerCase().includes('houdini'));
-    playTrack(idx >= 0 ? idx : 0);
-    return;
+/* ===== play track ===== */
+function playTrack(index){
+  currentIndex = index;
+  const track = tracks[index];
+
+  miniPlayer.style.display='flex';
+  fsPlayer.style.display='flex';
+
+  audio.src = track.mp3;
+  audio.play();
+
+  miniTitle.textContent = track.title;
+  fsTitle.textContent = track.title;
+
+  miniPlay.textContent='⏸';
+  playBtn.textContent='⏸';
+
+  // background video
+  bgVideo.src=track.mp4;
+  bgVideo.play();
+
+  // build lyrics
+  lyricsContainer.innerHTML='';
+  lyricNodes=[];
+  if(lyricsMap[index]){
+    lyricsMap[index].forEach(l=>{
+      const p=document.createElement('p');
+      p.className='lyric-line';
+      p.textContent=l.text;
+      lyricsContainer.appendChild(p);
+      lyricNodes.push({time:l.t,node:p});
+    });
   }
-  audio.paused ? audio.play() : audio.pause();
-  updateUI();
-});
-playBtn.addEventListener('click', () => { audio.paused ? audio.play() : audio.pause(); updateUI(); });
+}
 
-miniPrev.addEventListener('click', () => {
-  if(currentIndex == null) return;
-  currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-  playTrack(currentIndex);
-});
-miniNext.addEventListener('click', () => {
-  if(currentIndex == null) return;
-  currentIndex = (currentIndex + 1) % tracks.length;
-  playTrack(currentIndex);
-});
-prevBtn.addEventListener('click', () => { if(currentIndex != null){ currentIndex = (currentIndex - 1 + tracks.length) % tracks.length; playTrack(currentIndex); }});
-nextBtn.addEventListener('click', () => { if(currentIndex != null){ currentIndex = (currentIndex + 1) % tracks.length; playTrack(currentIndex); }});
+/* ===== controls ===== */
+miniPlay.addEventListener('click',()=>togglePlay());
+playBtn.addEventListener('click',()=>togglePlay());
+function togglePlay(){
+  if(audio.paused){audio.play();miniPlay.textContent='⏸';playBtn.textContent='⏸';}
+  else{audio.pause();miniPlay.textContent='▶';playBtn.textContent='▶';}
+}
+miniPrev.addEventListener('click',()=>prevTrack());
+miniNext.addEventListener('click',()=>nextTrack());
+prevBtn.addEventListener('click',()=>prevTrack());
+nextBtn.addEventListener('click',()=>nextTrack());
 
-miniExpand.addEventListener('click', ()=>{ fsPlayer.style.display = 'flex'; fsPlayer.setAttribute('aria-hidden','false'); });
-closeFull.addEventListener('click', ()=>{ fsPlayer.style.display = 'none'; fsPlayer.setAttribute('aria-hidden','true'); });
+function prevTrack(){if(currentIndex>0)playTrack(currentIndex-1);}
+function nextTrack(){if(currentIndex<tracks.length-1)playTrack(currentIndex+1);}
 
-progressBar.addEventListener('click', (e) => {
-  if(!audio.duration) return;
-  const rect = progressBar.getBoundingClientRect();
-  const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
-  audio.currentTime = (x / rect.width) * audio.duration;
-  updateUI();
-});
+/* ===== mini-expand fullscreen ===== */
+miniExpand.addEventListener('click',()=>fsPlayer.style.display='flex');
+closeFull.addEventListener('click',()=>fsPlayer.style.display='none');
 
-/* toggle lyrics when clicking the header row in fullscreen */
-let lyricsVisible = true;
-fsHeader.addEventListener('click', () => {
-  lyricsVisible = !lyricsVisible;
-  lyricsContainer.style.display = lyricsVisible ? 'block' : 'none';
-});
+/* ===== progress & time ===== */
+audio.addEventListener('timeupdate',()=>{
+  const pct=(audio.currentTime/audio.duration)*100||0;
+  progressFill.style.width=pct+'%';
+  const formatTime=t=>`${Math.floor(t/60)}:${('0'+Math.floor(t%60)).slice(-2)}`;
+  miniTime.textContent=`${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+  timeBig.textContent=`${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
 
-/* audio events */
-audio.addEventListener('timeupdate', () => {
-  updateUI();
-  updateLyricsHighlight();
-});
-audio.addEventListener('play', () => { updateUI(); });
-audio.addEventListener('pause', () => { updateUI(); });
-audio.addEventListener('ended', () => {
-  // auto next
-  if(currentIndex == null) return;
-  const next = (currentIndex + 1) % tracks.length;
-  playTrack(next);
-});
-
-/* keyboard shortcuts */
-window.addEventListener('keydown', (e) => {
-  if(e.code === 'Space' && document.activeElement === document.body){
-    e.preventDefault();
-    if(audio.src) { audio.paused ? audio.play() : audio.pause(); updateUI(); }
-  } else if(e.code === 'ArrowRight') {
-    if(currentIndex != null){ currentIndex = (currentIndex + 1) % tracks.length; playTrack(currentIndex); }
-  } else if(e.code === 'ArrowLeft') {
-    if(currentIndex != null){ currentIndex = (currentIndex - 1 + tracks.length) % tracks.length; playTrack(currentIndex); }
+  // lyrics highlight
+  if(lyricNodes.length){
+    lyricNodes.forEach((l,i)=>{
+      if(audio.currentTime>=l.time){
+        lyricNodes.forEach(n=>n.node.classList.remove('active'));
+        l.node.classList.add('active');
+        lyricsContainer.scrollTop=l.node.offsetTop-lyricsContainer.offsetTop-30;
+      }
+    });
   }
 });
 
-/* initial state: hide players until play */
-fsPlayer.style.display = 'none';
-miniPlayer.style.display = 'none';
-lyricsContainer.style.display = 'block';
+/* ===== click on progress ===== */
+progressBar.addEventListener('click',e=>{
+  const rect=progressBar.getBoundingClientRect();
+  const pct=(e.clientX-rect.left)/rect.width;
+  audio.currentTime=pct*audio.duration;
+});
 </script>
 
 </body>
